@@ -6,6 +6,13 @@
 </head>
 <body>
   <input type="text" id="searchTerm" placeholder="Enter search term">
+  <div class="toggle-container">
+    <label class="toggle-switch">
+      <input type="checkbox" id="searchToggle">
+      <span class="slider round"></span>
+    </label>
+    <span id="toggleText">Simple Search</span>
+  </div>
   <button id="searchButton">Search</button>
   <ul id="results"></ul>
   <script src="popup.js"></script>
