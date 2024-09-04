@@ -42,11 +42,20 @@ function scrollAndFilterSidebar(searchTerm, callback) {
     scrollSidebarDown();
 }
 
+function clickLink(url) {
+    let link = document.querySelector(`a[href="${url}"]`);
+    if (link) {
+        link.click();
+    }
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "search") {
         scrollAndFilterSidebar(request.searchTerm, (results) => {
             sendResponse({ results: results });
         });
         return true; // Keep the message channel open for sendResponse
+    } else if (request.action === "clickLink") {
+        clickLink(request.url);
     }
 });

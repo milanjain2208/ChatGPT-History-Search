@@ -19,7 +19,10 @@ function displayResults(results) {
     li.textContent = result.title;
     li.addEventListener('click', () => {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.update(tabs[0].id, { url: `https://chat.openai.com${result.url}` });
+        chrome.tabs.sendMessage(tabs[0].id, {
+          action: "clickLink",
+          url: result.url
+        });
       });
     });
     resultsContainer.appendChild(li);
