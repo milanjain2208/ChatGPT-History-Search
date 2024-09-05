@@ -1,14 +1,13 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "performGptSearch") {
-    performGptSearch(request.searchTerm, request.allEntries)
+    performGptSearch(request.searchTerm, request.allEntries, request.apiKey)
       .then(results => sendResponse({ results: results }))
       .catch(error => sendResponse({ error: error.message }));
     return true; // Keeps the message channel open for asynchronous response
   }
 });
 
-async function performGptSearch(searchTerm, allEntries) {
-  const apiKey = ''; // Replace with your actual API key
+async function performGptSearch(searchTerm, allEntries, apiKey) {
   const url = 'https://api.openai.com/v1/chat/completions';
   
   const response = await fetch(url, {
@@ -18,7 +17,7 @@ async function performGptSearch(searchTerm, allEntries) {
       'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: "gpt-3.5-turbo-0125",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",

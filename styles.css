@@ -105,3 +105,39 @@ li {
 li:hover {
     background-color: #f0f0f0;
 }
+
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.no-results-message {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+}

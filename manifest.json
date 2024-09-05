@@ -4,7 +4,8 @@
     "version": "1.0",
     "description": "Search through ChatGPT history.",
     "permissions": [
-      "activeTab"
+      "activeTab",
+      "storage"
     ],
     "host_permissions": [
       "https://chat.openai.com/*",

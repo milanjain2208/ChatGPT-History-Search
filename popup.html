@@ -5,16 +5,23 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <input type="text" id="searchTerm" placeholder="Enter search term">
-  <div class="toggle-container">
-    <label class="toggle-switch">
-      <input type="checkbox" id="searchToggle">
-      <span class="slider round"></span>
-    </label>
-    <span id="toggleText">Simple Search</span>
+  <div id="searchPage">
+    <input type="text" id="searchTerm" placeholder="Enter search term">
+    <div class="toggle-container">
+      <label class="toggle-switch">
+        <input type="checkbox" id="searchToggle">
+        <span class="slider round"></span>
+      </label>
+      <span id="toggleText">Simple Search</span>
+    </div>
+    <button id="searchButton">Search <span class="loader"></span></button>
+    <ul id="results"></ul>
   </div>
-  <button id="searchButton">Search</button>
-  <ul id="results"></ul>
+  <div id="apiKeyPage" style="display: none;">
+    <h2>Enter OpenAI API Key</h2>
+    <input type="password" id="apiKeyInput" placeholder="Enter your API key">
+    <button id="saveApiKey">Save API Key</button>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>

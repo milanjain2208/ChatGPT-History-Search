@@ -1,4 +1,5 @@
 let allEntries = [];
+let apiKey = '';
 
 document.addEventListener('DOMContentLoaded', () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -12,24 +13,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-document.getElementById('searchButton').addEventListener('click', () => {
+// Function to perform search
+function performSearch() {
     let searchTerm = document.getElementById('searchTerm').value;
     let isGptSearch = document.getElementById('searchToggle').checked;
+    let searchButton = document.getElementById('searchButton');
+    let loader = searchButton.querySelector('.loader');
+
+    // Disable button and show loader
+    searchButton.disabled = true;
+    loader.style.display = 'inline-block';
 
     if (isGptSearch) {
-        performGptSearch(searchTerm, allEntries)
+        if (!apiKey) {
+            showApiKeyPage();
+            searchButton.disabled = false;
+            loader.style.display = 'none';
+            return;
+        }
+        performGptSearch(searchTerm, allEntries, apiKey)
             .then(results => {
                 console.log("GPT results:", results);
                 displayResults(results);
             })
             .catch(error => {
                 console.error('GPT Search error:', error);
-                // Optionally, display an error message to the user
                 displayResults([{ title: 'Error: ' + error.message, url: '#' }]);
+            })
+            .finally(() => {
+                // Re-enable button and hide loader
+                searchButton.disabled = false;
+                loader.style.display = 'none';
             });
     } else {
         let filteredResults = filterEntries(searchTerm, allEntries);
         displayResults(filteredResults);
+        // Re-enable button and hide loader
+        searchButton.disabled = false;
+        loader.style.display = 'none';
+    }
+}
+
+// Add event listener for the search button click
+document.getElementById('searchButton').addEventListener('click', performSearch);
+
+// Add event listener for the Enter key press in the search input
+document.getElementById('searchTerm').addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
+        performSearch();
     }
 });
 
@@ -39,10 +70,10 @@ function filterEntries(searchTerm, entries) {
     );
 }
 
-async function performGptSearch(searchTerm, allEntries) {
+async function performGptSearch(searchTerm, allEntries, apiKey) {
     return new Promise((resolve, reject) => {
         chrome.runtime.sendMessage(
-            { action: "performGptSearch", searchTerm: searchTerm, allEntries: allEntries },
+            { action: "performGptSearch", searchTerm: searchTerm, allEntries: allEntries, apiKey: apiKey },
             response => {
                 if (response.error) {
                     reject(new Error(response.error));
@@ -57,26 +88,60 @@ async function performGptSearch(searchTerm, allEntries) {
 function displayResults(results) {
     let resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = ''; // Clear previous results
-    results.forEach(result => {
-        let li = document.createElement('li');
-        li.textContent = result.title;
-        li.addEventListener('click', () => {
-            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                chrome.tabs.sendMessage(tabs[0].id, {
-                    action: "clickLink",
-                    url: result.url
+    
+    if (results.length === 0) {
+        // Display "No related results found" message
+        let noResultsMessage = document.createElement('li');
+        noResultsMessage.textContent = 'No related results found';
+        noResultsMessage.className = 'no-results-message';
+        resultsContainer.appendChild(noResultsMessage);
+    } else {
+        results.forEach(result => {
+            let li = document.createElement('li');
+            li.textContent = result.title;
+            li.addEventListener('click', () => {
+                chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        action: "clickLink",
+                        url: result.url
+                    });
                 });
             });
+            resultsContainer.appendChild(li);
         });
-        resultsContainer.appendChild(li);
-    });
+    }
 }
 
+function showApiKeyPage() {
+  document.getElementById('searchPage').style.display = 'none';
+  document.getElementById('apiKeyPage').style.display = 'block';
+}
+
+function showSearchPage() {
+  document.getElementById('searchPage').style.display = 'block';
+  document.getElementById('apiKeyPage').style.display = 'none';
+}
+
+document.getElementById('saveApiKey').addEventListener('click', () => {
+  apiKey = document.getElementById('apiKeyInput').value;
+  chrome.storage.local.set({ 'openaiApiKey': apiKey }, () => {
+    showSearchPage();
+  });
+});
+
 document.getElementById('searchToggle').addEventListener('change', (event) => {
-    let toggleText = document.getElementById('toggleText');
-    if (event.target.checked) {
+  let toggleText = document.getElementById('toggleText');
+  if (event.target.checked) {
+    chrome.storage.local.get('openaiApiKey', (result) => {
+      if (result.openaiApiKey) {
+        apiKey = result.openaiApiKey;
         toggleText.textContent = 'GPT Search';
-    } else {
-        toggleText.textContent = 'Simple Search';
-    }
+      } else {
+        showApiKeyPage();
+        event.target.checked = false;
+      }
+    });
+  } else {
+    toggleText.textContent = 'Simple Search';
+  }
 });
