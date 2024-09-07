@@ -6,7 +6,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-  <div id="searchPage">
+  <div id="loadingPage" style="display: none;">
+    <p id="loadingMessage">Scrolling is currently in progress...</p>
+    <div class="loader"></div>
+  </div>
+  <div id="searchPage" style="display: none;">
     <input type="text" id="searchTerm" placeholder="Enter search term">
     <div class="toggle-container">
       <label class="toggle-switch">

@@ -2,12 +2,15 @@ let allEntries = [];
 let apiKey = '';
 
 document.addEventListener('DOMContentLoaded', () => {
+    showLoadingPage();
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.tabs.sendMessage(tabs[0].id, { action: "getAllEntries" }, (response) => {
             if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError);
+                showSearchPage();
             } else {
                 allEntries = response.results;
+                showSearchPage();
             }
         });
     });
@@ -19,6 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+function showLoadingPage() {
+    document.getElementById('loadingPage').style.display = 'block';
+    document.getElementById('searchPage').style.display = 'none';
+    document.getElementById('apiKeyPage').style.display = 'none';
+}
 
 // Function to perform search
 function performSearch() {
@@ -125,6 +134,7 @@ function showApiKeyPage() {
 }
 
 function showSearchPage() {
+  document.getElementById('loadingPage').style.display = 'none';
   document.getElementById('searchPage').style.display = 'block';
   document.getElementById('apiKeyPage').style.display = 'none';
 }
