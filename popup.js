@@ -11,6 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Load saved API key
+    chrome.storage.local.get('openaiApiKey', (result) => {
+        if (result.openaiApiKey) {
+            apiKey = result.openaiApiKey;
+        }
+    });
 });
 
 // Function to perform search
@@ -126,22 +133,39 @@ document.getElementById('saveApiKey').addEventListener('click', () => {
   apiKey = document.getElementById('apiKeyInput').value;
   chrome.storage.local.set({ 'openaiApiKey': apiKey }, () => {
     showSearchPage();
+    updateToggleText();
   });
 });
 
+document.getElementById('backButton').addEventListener('click', () => {
+  showSearchPage();
+});
+
 document.getElementById('searchToggle').addEventListener('change', (event) => {
+  updateToggleText();
+});
+
+document.getElementById('editApiKey').addEventListener('click', () => {
+  showApiKeyPage();
+});
+
+function updateToggleText() {
   let toggleText = document.getElementById('toggleText');
-  if (event.target.checked) {
-    chrome.storage.local.get('openaiApiKey', (result) => {
-      if (result.openaiApiKey) {
-        apiKey = result.openaiApiKey;
-        toggleText.textContent = 'GPT Search';
-      } else {
-        showApiKeyPage();
-        event.target.checked = false;
-      }
-    });
+  let editIcon = document.getElementById('editApiKey');
+  let isGptSearch = document.getElementById('searchToggle').checked;
+
+  if (isGptSearch) {
+    if (apiKey) {
+      toggleText.textContent = 'GPT Search';
+      editIcon.style.display = 'inline';
+    } else {
+      showApiKeyPage();
+      document.getElementById('searchToggle').checked = false;
+      toggleText.textContent = 'Simple Search';
+      editIcon.style.display = 'none';
+    }
   } else {
     toggleText.textContent = 'Simple Search';
+    editIcon.style.display = 'none';
   }
-});
+}

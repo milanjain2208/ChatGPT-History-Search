@@ -141,3 +141,28 @@ button:disabled {
     border: 1px dashed #ccc;
     border-radius: 4px;
 }
+
+#editApiKey {
+    font-size: 14px;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+#editApiKey:hover {
+    color: #0056b3;
+}
+
+#backButton {
+    margin-top: 10px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#backButton:hover {
+    background-color: #e0e0e0;
+}

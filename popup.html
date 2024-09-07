@@ -3,6 +3,7 @@
 <head>
   <title>ChatGPT History Search</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
   <div id="searchPage">
@@ -13,6 +14,7 @@
         <span class="slider round"></span>
       </label>
       <span id="toggleText">Simple Search</span>
+      <i id="editApiKey" class="fas fa-edit" style="display: none; cursor: pointer; margin-left: 5px;" title="Update API Key"></i>
     </div>
     <button id="searchButton">Search <span class="loader"></span></button>
     <ul id="results"></ul>
@@ -21,6 +23,7 @@
     <h2>Enter OpenAI API Key</h2>
     <input type="password" id="apiKeyInput" placeholder="Enter your API key">
     <button id="saveApiKey">Save API Key</button>
+    <button id="backButton">Back</button>
   </div>
   <script src="popup.js"></script>
 </body>
