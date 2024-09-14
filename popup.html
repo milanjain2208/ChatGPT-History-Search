@@ -6,28 +6,34 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-  <div id="loadingPage" style="display: none;">
-    <p id="loadingMessage">Scrolling is currently in progress...</p>
-    <div class="loader"></div>
-  </div>
-  <div id="searchPage" style="display: none;">
-    <input type="text" id="searchTerm" placeholder="Enter search term">
-    <div class="toggle-container">
-      <label class="toggle-switch">
-        <input type="checkbox" id="searchToggle">
-        <span class="slider round"></span>
-      </label>
-      <span id="toggleText">Simple Search</span>
-      <i id="editApiKey" class="fas fa-edit" style="display: none; cursor: pointer; margin-left: 5px;" title="Update API Key"></i>
+  <div class="container">
+    <div id="loadingPage" style="display: none;">
+      <p id="loadingMessage">Scrolling is currently in progress...</p>
+      <div class="loader"></div>
     </div>
-    <button id="searchButton">Search <span class="loader"></span></button>
-    <ul id="results"></ul>
-  </div>
-  <div id="apiKeyPage" style="display: none;">
-    <h2>Enter OpenAI API Key</h2>
-    <input type="password" id="apiKeyInput" placeholder="Enter your API key">
-    <button id="saveApiKey">Save API Key</button>
-    <button id="backButton">Back</button>
+    <div id="searchPage" style="display: none;">
+      <h2>ChatGPT History Search</h2>
+      <input type="text" id="searchTerm" placeholder="Enter search term">
+      <div class="toggle-container">
+        <label class="toggle-switch">
+          <input type="checkbox" id="searchToggle">
+          <span class="slider round"></span>
+        </label>
+        <span id="toggleText">Simple Search</span>
+        <i id="editApiKey" class="fas fa-edit" style="display: none; margin-left: 5px;" title="Update API Key"></i>
+      </div>
+      <button id="searchButton">Search <span class="loader"></span></button>
+      <ul id="results"></ul>
+    </div>
+    <div id="apiKeyPage" style="display: none;">
+      <h2>Enter OpenAI API Key</h2>
+      <input type="password" id="apiKeyInput" placeholder="Enter your API key">
+      <button id="saveApiKey">Save API Key</button>
+      <button id="backButton">Back</button>
+    </div>
+    <div id="feedback">
+      <a href="mailto:milanjain2208@gmail.com?subject=Feedback%20for%20ChatGPT%20History%20Search%20Extension">Feedback</a>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>
