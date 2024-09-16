@@ -28,6 +28,12 @@
     <div id="apiKeyPage" style="display: none;">
       <h2>Enter OpenAI API Key</h2>
       <input type="password" id="apiKeyInput" placeholder="Enter your API key">
+      <div class="api-key-display-container" style="display: none;">
+        <span id="maskedApiKey"></span>
+        <button id="clearApiKey" class="icon-button" title="Clear API Key">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
       <button id="saveApiKey">Save API Key</button>
       <button id="backButton">Back</button>
     </div>

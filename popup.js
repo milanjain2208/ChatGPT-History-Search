@@ -16,9 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Load saved API key
-    chrome.storage.local.get('openaiApiKey', (result) => {
+    chrome.storage.sync.get('openaiApiKey', (result) => {
         if (result.openaiApiKey) {
             apiKey = result.openaiApiKey;
+            document.getElementById('maskedApiKey').textContent = maskApiKey(apiKey);
+            document.querySelector('.api-key-display-container').style.display = 'flex';
         }
     });
 });
@@ -140,11 +142,14 @@ function showSearchPage() {
 }
 
 document.getElementById('saveApiKey').addEventListener('click', () => {
-  apiKey = document.getElementById('apiKeyInput').value;
-  chrome.storage.local.set({ 'openaiApiKey': apiKey }, () => {
-    showSearchPage();
-    updateToggleText();
-  });
+    const newApiKey = document.getElementById('apiKeyInput').value;
+    chrome.storage.sync.set({ 'openaiApiKey': newApiKey }, () => {
+        apiKey = newApiKey;
+        document.getElementById('maskedApiKey').textContent = maskApiKey(apiKey);
+        document.querySelector('.api-key-display-container').style.display = 'flex';
+        showSearchPage();
+        updateToggleText();
+    });
 });
 
 document.getElementById('backButton').addEventListener('click', () => {
@@ -170,12 +175,27 @@ function updateToggleText() {
       editIcon.style.display = 'inline';
     } else {
       showApiKeyPage();
-      document.getElementById('searchToggle').checked = false;
-      toggleText.textContent = 'Simple Search';
-      editIcon.style.display = 'none';
+    //   document.getElementById('searchToggle').checked = false;
+    //   toggleText.textContent = 'Simple Search';
+    //   editIcon.style.display = 'none';
     }
   } else {
     toggleText.textContent = 'Simple Search';
     editIcon.style.display = 'none';
   }
+}
+
+// Add an event listener for the "Clear API Key" icon button
+document.getElementById('clearApiKey').addEventListener('click', () => {
+  chrome.storage.sync.remove('openaiApiKey', () => {
+    apiKey = '';
+    document.getElementById('apiKeyInput').value = '';
+    document.getElementById('maskedApiKey').textContent = '';
+    document.querySelector('.api-key-display-container').style.display = 'none';
+    updateToggleText();
+  });
+});
+
+function maskApiKey(apiKey) {
+    return apiKey.slice(0, 4) + '****' + apiKey.slice(-4);
 }

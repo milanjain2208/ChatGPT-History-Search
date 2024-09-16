@@ -1,8 +1,15 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "performGptSearch") {
-    performGptSearch(request.searchTerm, request.allEntries, request.apiKey)
-      .then(results => sendResponse({ results: results }))
-      .catch(error => sendResponse({ error: error.message }));
+    chrome.storage.sync.get('openaiApiKey', (result) => {
+      const apiKey = result.openaiApiKey;
+      if (!apiKey) {
+        sendResponse({ error: "API key not found. Please set your API key in the extension settings." });
+      } else {
+        performGptSearch(request.searchTerm, request.allEntries, apiKey)
+          .then(results => sendResponse({ results: results }))
+          .catch(error => sendResponse({ error: error.message }));
+      }
+    });
     return true; // Keeps the message channel open for asynchronous response
   }
 });
