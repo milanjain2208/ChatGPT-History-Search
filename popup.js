@@ -89,18 +89,40 @@ function filterEntries(searchTerm, entries) {
 }
 
 async function performGptSearch(searchTerm, allEntries, apiKey) {
-    return new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage(
-            { action: "performGptSearch", searchTerm: searchTerm, allEntries: allEntries, apiKey: apiKey },
-            response => {
-                if (response.error) {
-                    reject(new Error(response.error));
-                } else {
-                    resolve(response.results);
+    const url = 'https://api.openai.com/v1/chat/completions';
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: "gpt-4o",
+            messages: [
+                {
+                    role: "system",
+                    content: "You are a helpful assistant designed to find the most relevant ChatGPT conversation topics based on a user's search term. Analyze the provided conversation titles and return the most relevant matches in JSON format. The JSON should be an array of objects with a 'matches' property that contains an array of the most relevant matches. Something like this: {'matches': ['match1', 'match2', 'match3']}"
+                },
+                {
+                    role: "user",
+                    content: `Search term: "${searchTerm}". Conversation titles: ${JSON.stringify(allEntries.map(r => r.title))}`
                 }
-            }
-        );
+            ],
+            response_format: { type: "json_object" }
+        })
     });
+
+    console.log(response);
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const gptResults = JSON.parse(data.choices[0].message.content);
+    console.log(gptResults);
+    return allEntries.filter(result => gptResults.matches.includes(result.title));
 }
 
 function displayResults(results) {

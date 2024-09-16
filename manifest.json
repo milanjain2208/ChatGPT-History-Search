@@ -11,7 +11,13 @@
       "https://chat.openai.com/*",
       "https://api.openai.com/*"
     ],
+    "icons": {
+      "1024": "icon1024.png"
+    },
     "action": {
+      "default_icon": {
+        "1024": "icon1024.png"
+      },
       "default_popup": "popup.html"
     },
     "content_scripts": [
@@ -25,8 +31,5 @@
         "resources": ["openai.min.js"],
         "matches": ["https://chatgpt.com/*"]
       }
-    ],
-    "background": {
-      "service_worker": "background.js"
-    }
+    ]
   }

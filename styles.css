@@ -252,6 +252,7 @@ button:disabled {
 
 .icon-button:hover {
     color: #c0392b;
+    background-color: #f1f3f5;
 }
 
 #clearApiKey {
